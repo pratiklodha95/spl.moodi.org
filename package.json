@@ -1,0 +1,21 @@
+{
+  "name": "lite.moodi.org",
+  "version": "0.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pratiklodha95/lite.moodi.org.git"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/pratiklodha95/lite.moodi.org/issues"
+  },
+  "dependencies": {
+    "body-parser": "~1.14.1"
+  }
+}
