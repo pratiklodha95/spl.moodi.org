@@ -16,6 +16,7 @@
     "url": "https://github.com/pratiklodha95/lite.moodi.org/issues"
   },
   "dependencies": {
-    "body-parser": "~1.14.1"
+    "body-parser": "~1.14.1",
+    "mysql": "~2.9.0"
   }
 }
