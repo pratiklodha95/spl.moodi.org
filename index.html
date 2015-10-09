@@ -2,6 +2,34 @@
 <html>
 <head>
 	<title>Mood Indigo</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+	<script>
+		$.get("https://moodi.org/api/city",function(data){
+			console.log(data);
+			var city=data.data;
+			for(var i=0;i<city.length;i++)
+			{
+				$('#city').append('<option VALUE='+city[i].city_id+'>'+city[i].city_name+'</option>')
+			}
+		});
+		function getCollege(id){
+			$.post("https://moodi.org/api/college",{city:id},function(data){
+				console.log(data);
+				var college=data.data;
+				for(var i=0;i<college.length;i++)
+				{
+					$('#college').append('<option VALUE='+college[i].clg_id+'>'+college[i].clg_name+'</option>')
+				}
+			})
+		}
+
+		function randm(){
+			var city=$('#city').val();
+			$.post("http://localhost:5000/api/random",{city:"cool che",asdsada:"dasdsa"},function(data){
+				console.log(data);
+			});
+		}
+	</script>
 </head>
 <body>
  For now lets directly deal with only MI-NO registration
@@ -20,6 +48,11 @@
 		<li>If any data is same, display already registered and display the old mi-no</li>
 		<li>If any error display all the error</li>
 	</ol>
+
+	<select id="city" name="city" onChange="getCollege(this.value)"> </select>
+	<select id="college" name="college"> </select>
+
+	<input type="submit" onclick="randm()" />
  </div>
 
 </body>
