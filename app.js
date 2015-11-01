@@ -17,7 +17,7 @@ app.get('/',express.static(__dirname)); //serves index.html
 
 app.post('/api/submit',urlencodedParser,function(req,res){
 	var params=req.body;
-
+	console.log(params);
 });
 
 http.createServer(app).listen(app.get('port'),function(){

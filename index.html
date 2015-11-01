@@ -20,12 +20,16 @@
 				{
 					$('#college').append('<option VALUE='+college[i].clg_id+'>'+college[i].clg_name+'</option>')
 				}
-			})
-		}
 
+		}
+		)};
 		function randm(){
 			var city=$('#city').val();
-			$.post("http://localhost:5000/api/random",{city:"cool che",asdsada:"dasdsa"},function(data){
+			var name =$('#name').val();
+			var email=$('#email').val();
+			var mobile=$('#mobile').val();
+			console.log(city+' '+name+' '+email);
+			$.post("http://localhost:5000/api/submit",{city:city,name:name,email:email},function(data){
 				console.log(data);
 			});
 		}
@@ -48,10 +52,21 @@
 		<li>If any data is same, display already registered and display the old mi-no</li>
 		<li>If any error display all the error</li>
 	</ol>
-
+	<input type="text" id="name"/>
+	<input type="text" id="email" />
+	<input type="text" id="mobile" />
+	<select id="gender">
+		<option value="male">Male</option>
+		<option value="female">Female</option> 
+	</select>
 	<select id="city" name="city" onChange="getCollege(this.value)"> </select>
 	<select id="college" name="college"> </select>
-
+	<select id="year">
+		<option value="first">first</option>
+		<option value="second">second</option>
+		<option value="third">third</option>
+		<option value="fourth">fourth</option>
+	</select>
 	<input type="submit" onclick="randm()" />
  </div>
 
