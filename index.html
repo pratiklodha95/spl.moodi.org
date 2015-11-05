@@ -28,8 +28,12 @@
 			var name =$('#name').val();
 			var email=$('#email').val();
 			var mobile=$('#mobile').val();
-			console.log(city+' '+name+' '+email);
-			$.post("http://localhost:5000/api/submit",{city:city,name:name,email:email},function(data){
+			var gender=$('#gender').val();
+			var college=$('#college').val();
+			var year=$('#year').val();
+			console.log(city+' '+name+' '+email+' '+mobile+' '+gender+' '+college+' '+year);
+			$.post("http://localhost:5000/api/submit",{city:city, name:name,
+				email:email, mobile:mobile, gender:gender, college:college, year:year},function(data){
 				console.log(data);
 			});
 		}
@@ -52,9 +56,9 @@
 		<li>If any data is same, display already registered and display the old mi-no</li>
 		<li>If any error display all the error</li>
 	</ol>
-	<input type="text" id="name"/>
-	<input type="text" id="email" />
-	<input type="text" id="mobile" />
+	<input type="text" id="name" value="name"/>
+	<input type="text" id="email" value="email id"/>
+	<input type="text" id="mobile" value="mobile no"/>
 	<select id="gender">
 		<option value="male">Male</option>
 		<option value="female">Female</option> 
