@@ -2,6 +2,7 @@ var http=require("http");
 var express=require("express");
 var bodyParser=require("body-parser");
 var mysql=require('mysql');
+var mail=require('./mailing');
 var app=express();
 
 
@@ -44,9 +45,41 @@ var insert=function(params,new_mi_no,res)
 	 		}
 	 		res.send(obj);
 	 		//sending mails
-
-	 		
-	 		
+	 		connection.query('SELECT * FROM colleges where city_id =' + connection.escape(params.city_id) + ' and clg_id = ' + connection.escape(params.college_id), function(err, rows, fields) {
+			   	  var object=rows[0];
+			   	  console.log(object.city_id);
+			   	  console.log(object.cl_bool);
+			      if (object.city_id == 1)
+			      {
+			      	//mumbai junta
+			        if(object.cl_bool==1)
+			        {
+			          	connection.query('SELECT * FROM users where city_id =' + connection.escape(params.city_id) + ' and clg_id = ' + connection.escape(params.college_id) + ' and group_id = "1"' , function(err, rows, fields) {
+				            if (err) console.log(err);
+				            var message = "Hello,<br>Greetings from Mood Indigo!<br>Thanks for Registering. You are successfully Registered, your MI number is :"+new_mi_no + "<br><br>";
+				            mail.email(params.email,'registrations@moodi.org',subject,message)
+			          	});
+			        }
+			        else
+			        {
+			         var message = "Hello,<br>Greetings from Mood Indigo!<br>Thanks for Registering. You are successfully Registered, your MI number is :"+new_mi_no + "<br><br>Your college doesn't have a Contingent Leader till date. All participating colleges must nominate a 3 Member Mood Indigo Representative Team comprising of a Contingent Leader (CL) and 2 Assistant Contingent Leaders (ACL) for Mood Indigo 2015. A scanned copy of a letter by the director/principal of the college approving the nomination of the team needs to be sent to the below mentioned email ids. The CL when appointed should get in touch with the Hospitality & Public Relations Core Group Members.<br><br>We hope that you have a hawaiian December this year.<br><br>";  
+			         mail.email(params.email,'registrations@moodi.org',subject,message)
+			        }
+			      }
+			      else{
+			        if(object.cl_bool==1){
+			          connection.query('SELECT * FROM users where city_id =' + connection.escape(params.city_id) + ' and clg_id = ' + connection.escape(params.college_id) + ' and group_id = "1"' , function(err, rows, fields) {
+						console.log(err);
+			            var message = "Thanks for Registering. You are successfully Registered, your MI number is :"+new_mi_no + "<br>To participate and avail accommodation as a part of the Contingent from your college, kindly contact your Contingent Leader (CL) whose details are as follows:<br><br>Name : " + rows[0].name + "<br>Email :" +rows[0].email +".<br><br> For general queries get in touch with the Hospitality & Public Relations Core Group Members";
+			            mail.email(params.email,'registrations@moodi.org',subject,message)
+			          })
+			        }
+			        else{
+			          var message = "Hello,<br>Greetings from Mood Indigo!<br>Thanks for Registering. You are successfully Registered, your MI number is :"+new_mi_no + "<br><br>Your college doesn't have a Contingent Leader till date. All participating colleges must nominate a 3 Member Mood Indigo Representative Team comprising of a Contingent Leader (CL) and 2 Assistant Contingent Leaders (ACL) for Mood Indigo 2015. A scanned copy of a letter by the director/principal of the college approving the nomination of the team needs to be sent to the below mentioned email ids. The CL when appointed should get in touch with the Hospitality & Public Relations Core Group Members.<br><br>We hope that you have a hawaiian December this year.<br><br>";
+			          mail.email(params.email,'registrations@moodi.org',subject,message)
+			        }
+			      }                   
+		  	});
 	 	}
 	 });
 }
@@ -148,6 +181,7 @@ app.post('/api/submit',urlencodedParser,function(req,res){
  		res.send(obj);
 	}
 });
+
 
 http.createServer(app).listen(app.get('port'),function(){
 	console.log("server is running for faster moodi on port 5000");
