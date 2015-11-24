@@ -12,9 +12,9 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var mysql = require('mysql');
 var connection = mysql.createConnection({
 	host : 'localhost',
-	user : 'mi_2014',
-	password :'dontfuckaround' ,
-	database :'mi_2014' 
+	user : '',
+	password :'' ,
+	database :'' 
 })
 
 // connection.connect();
