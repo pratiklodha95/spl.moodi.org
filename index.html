@@ -54,9 +54,15 @@
 				$('.form-group').addClass('has-success');
 				$.post("http://lite.moodi.org/api/submit",{city:city, name:name,email:email, mobile:mobile, gender:gender, college:college, year:year},function(data){
 					console.log(data);
-					if(data.status)
+					if(data.status && data.city_id != 1)
 					{
 						document.getElementById("mino").innerHTML="Congratulations! You have been registered for MI 2k15.</br> Your MI number is <b>"+data.mi_no+"</b>."
+					}
+					else if(data.status && data.city_id == 1)
+					{
+						function ticket(){
+							window.location.assign("spl.moodi.org/ticket.html");
+						}
 					}
 					else if(data.err==1)
 					{
