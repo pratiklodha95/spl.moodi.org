@@ -54,6 +54,7 @@ var insert=function(params,new_mi_no,res)
 			      {
 			      	//mumbai junta
 				  	var string = encodeURIComponent(new_mi_no);
+				  	req.session.mi_no = new_mi_no;
 					res.redirect('/concerts.html?mino=' + string);
 			     
 			        if(object.cl_bool==1)
@@ -87,6 +88,15 @@ var insert=function(params,new_mi_no,res)
 	 	}
 	 });
 }
+
+app.post('/api/mumbai',function(req,res){
+	if(req.params.mino==req.session.mi_no)
+	{
+		connection.query("UPDATE users SET concert = "+req.params+" WHERE mi_no = "+req.session.mi_no,function(err,rows,fields){
+			
+		});
+	}
+});
 
 app.get('/test',function(req,res){
   	var string = encodeURIComponent('M');
