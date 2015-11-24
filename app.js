@@ -2,7 +2,8 @@ var http=require("http");
 var express=require("express");
 var bodyParser=require("body-parser");
 var mysql=require('mysql');
-var mail=require('./mailing');
+var path=require('path');
+var mail=require('./api/mailing');
 var app=express();
 
 
@@ -21,7 +22,7 @@ var connection = mysql.createConnection({
 // connection.connect();
 
 app.get('/',express.static(__dirname)); //serves index.html
-
+app.use(express.static('public'));
 
 var insert=function(params,new_mi_no,res)
 {
@@ -52,6 +53,9 @@ var insert=function(params,new_mi_no,res)
 			      if (object.city_id == 1)
 			      {
 			      	//mumbai junta
+				  	var string = encodeURIComponent(new_mi_no);
+					res.redirect('/concerts.html?mino=' + string);
+			     
 			        if(object.cl_bool==1)
 			        {
 			          	connection.query('SELECT * FROM users where city_id =' + connection.escape(params.city_id) + ' and clg_id = ' + connection.escape(params.college_id) + ' and group_id = "1"' , function(err, rows, fields) {
@@ -83,6 +87,11 @@ var insert=function(params,new_mi_no,res)
 	 	}
 	 });
 }
+
+app.get('/test',function(req,res){
+  	var string = encodeURIComponent('M');
+	res.redirect('/concerts.html?mino=' + string);
+});
 
 app.post('/api/submit',urlencodedParser,function(req,res){
 	var params=req.body;

@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+<link rel="stylesheet" type="text/css" href="cstyle.css">
+<head>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+<script type="text/javascript">
+	function getUrlVars()
+	{
+		var vars = [], hash;
+		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+		for(var i = 0; i < hashes.length; i++)
+		{
+		    hash = hashes[i].split('=');
+		    vars.push(hash[0]);
+		    vars[hash[0]] = hash[1];
+		}
+		return vars;
+	}
+	var params=getUrlVars();
+	window.onload=function()
+	{
+		$('.mino').html("<h3>Your MI Number is "+params.mino+"</h3>");
+	}
+	function sendConcert(){
+		var inputElements= document.getElementsByClass("messageCheckbox")
+		var checked = [];
+		for(var i=0; i<4; i++)
+			checked[i]=inputElements[i].checked?1:0;
+		console.log(checked);
+	}
+</script>
+
+</head>
+<body>
+<div id="jumbotron">
+	<div class="mino"></div>
+	<div id="container">
+	<form>
+		<div class="concert">
+			<img src="images/concert1.jpg">
+			<p>Nostalgia Night</p>
+			<p>Artist: Shaan</p>
+			<p>Date: 18/12/2015</p>
+			<input class="messageCheckbox" type="checkbox" name="concert" value="1">select</br>
+		</div>
+		<div class="concert">
+			<img src="images/concert2.jpg">
+			<p>Not decided</p>
+			<p>Artist: Not decided</p>
+			<p>Date: 19/12/2015</p>
+			<input class="messageCheckbox" type="checkbox" name="concert" value="2">select</br>
+		</div>
+		<div class="concert">
+			<img src="images/concert3.jpg">
+			<p>EDM Night</p>
+			<p>Artist: BORGEOUS</p>
+			<p>Date: 20/12/2015</p>
+			<input class="messageCheckbox" type="checkbox" name="concert" value="3">select</br>
+		</div>
+		<div class="concert">
+			<img src="images/concert4.jpg">
+			<p>Popular Night</p>
+			<p>Artist: Pritam etc</p>
+			<p>Date: 21/12/2015</p>
+			<input class="messageCheckbox" type="checkbox" name="concert" value="4">select</br>
+		</div> </br>
+		<input type="submit" onclick="sendConcert()" value="Submit">
+	</form>
+	</div>
+</div>
+</body>
+
+</html>

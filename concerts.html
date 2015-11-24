@@ -4,20 +4,25 @@
 <head>
 
 <script type="text/javascript">
+	
 	function sendConcert(){
-		var inputElements= document.getElementsByClass("messageCheckbox")
 		var checked = [];
+		var inputElements= document.getElementsByClassName("messageCheckbox")
 		for(var i=0; i<4; i++)
 			checked[i]=inputElements[i].checked?1:0;
 		console.log(checked);
+
+		$post("https://127.0.0.1:5678", {concerts:checked}){
+		console.log(checked);	
 	}
+	}
+
 </script>
 
 </head>
 <body>
 <div id="jumbotron">
 	<div id="container">
-	<form>
 		<div class="concert">
 			<img src="images/concert1.jpg">
 			<p>Nostalgia Night</p>
@@ -46,8 +51,7 @@
 			<p>Date: 21/12/2015</p>
 			<input class="messageCheckbox" type="checkbox" name="concert" value="4">select</br>
 		</div> </br>
-		<input type="submit" onclick="sendConcert()" value="Submit">
-	</form>
+		<input type="button" onclick="sendConcert()" value="Submit"> 
 	</div>
 </div>
 </body>
