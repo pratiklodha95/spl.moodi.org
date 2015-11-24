@@ -1,0 +1,15 @@
+.concert{
+	display:inline-block;
+	width: 30%;
+	padding: 20px;
+	margin: 2%;
+	border: 2px solid;
+	border-radius: 5px;
+}
+#container{
+	width:60%;
+	margin: 0 auto;
+}
+#jumbotron{
+	width:100%;
+}
