@@ -2,7 +2,19 @@
 <html>
 <head>
 	<title>Mood Indigo</title>
+    <meta name="fragment" content="!"> 
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Mood Indigo 2014-15 - IIT Bombay : Asia's largest cultural festival held in December mumbai concert.">   
+    <meta name="keyword" content="cultural, asia,largest,concert ,festival,livewire, 180 events, competitions">
+    <meta name="author" content="pratik lodha,lodhapratik9@gmail.com"> 
+    <meta name="robots" content="index, follow">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" href="./favicon.ico">
+	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+
 	<script>
 		$.get("https://moodi.org/api/city",function(data){
 			console.log(data);
@@ -23,56 +35,140 @@
 
 		}
 		)};
-		function randm(){
+		function randm()
+		{
+			var email_reg = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
+			var mobile_reg = /^(\+\d{1,3}[- ]?)?\d{10}$/;
 			var city=$('#city').val();
 			var name =$('#name').val();
 			var email=$('#email').val();
 			var mobile=$('#mobile').val();
-			var gender=$('#gender').val();
+			var bday=$('#bday').val()
+			var gender=$('input[name="gender"]:checked').val();
+			console.log(gender);
 			var college=$('#college').val();
 			var year=$('#year').val();
-			console.log(city+' '+name+' '+email+' '+mobile+' '+gender+' '+college+' '+year);
-			$.post("http://localhost:5000/api/submit",{city:city, name:name,
-				email:email, mobile:mobile, gender:gender, college:college, year:year},function(data){
-				console.log(data);
-			});
+			if(name!=""&&email_reg.test(email)&&mobile_reg.test(mobile)&&year!=""&&gender!=""&&city!=undefined&&college!=0)
+			{
+				$('.has-error').removeClass('has-error');
+				$('.form-group').addClass('has-success');
+				$.post("http://lite.moodi.org/api/submit",{city:city, name:name,email:email, mobile:mobile, gender:gender, college:college, year:year},function(data){
+					console.log(data);
+					if(data.status)
+					{
+						document.getElementById("mino").innerHTML="Congratulations! You have been registered for MI 2k15.</br> Your MI number is <b>"+data.mi_no+"</b>."
+					}
+					else if(data.err==1)
+					{
+						document.getElementById("mino").innerHTML="You are already registered for MI 2k15. Your MI number is <b>"+data.data.mi_no+"</b>."
+					}
+					else
+					{
+						document.getElementById("mino").innerHTML="Registration unsuccessful! Some error occured. Please try again later."
+					}
+				});	
+			}
+			else
+			{
+				if(!email_reg.test(email))
+				{
+					$('.email').addClass("has-error");
+				}
+				if(!mobile_reg.test(mobile))
+				{
+					$('.mobile').addClass("has-error");
+				}
+				if(city==undefined)
+				{
+					$('.city').addClass("has-error");
+				}
+				if(college==0)
+				{
+					$('.college').addClass("has-error");
+				}
+				if(name=="")
+				{
+					$("#nameerr").html("please fill this field");
+					$('.name').addClass("has-error");
+				}
+				if(gender=="")
+				{
+					$('.gender').addClass("has-error");
+				}
+				if(year=="")
+				{
+					$('.year').addClass("has-error");
+				}	
+			}
 		}
 	</script>
+	<style type="text/css">
+	.form-signin{
+		max-width: 350px;
+		margin: 0 auto;
+		padding: 15px;
+	}
+	h2,h3{
+		text-align: center;
+	}
+	</style>
 </head>
 <body>
- For now lets directly deal with only MI-NO registration
-
+<h2>Mood Indigo 2015 - A hawaiian escapade</h2>
+<h3>MI Number Registration Form for lite version</h3>
+<div>
+	<div style="text-align:center" id="mino"></div>
  <div class="registration">
-	<ul>
-		<li>same field as the main website</li>
-		<li>need to call the city api</li>
-		<li>need to college api whenever city selected change</li>
-		<li>submit complete data to backend for verification</li>
-	</ul> 	
-
-	<ol>
-		<li>need to add captcha later on</li>
-		<li>display the new MI-NO on the postive response</li>
-		<li>If any data is same, display already registered and display the old mi-no</li>
-		<li>If any error display all the error</li>
-	</ol>
-	<input type="text" id="name" value="name"/>
-	<input type="text" id="email" value="email id"/>
-	<input type="text" id="mobile" value="mobile no"/>
-	<select id="gender">
-		<option value="male">Male</option>
-		<option value="female">Female</option> 
-	</select>
-	<select id="city" name="city" onChange="getCollege(this.value)"> </select>
-	<select id="college" name="college"> </select>
-	<select id="year">
+	<div class="form-signin">
+	<div class="form-group email">
+	<label class="control-label">Name</label>
+	<input class="form-control" type="text" id="name" placeholder="Full name"/>
+	<span id="nameerr"></span>
+	</div>
+	<div class="form-group email">
+	<label class="control-label">Email ID</label>
+	<input class="form-control" type="text" id="email" placeholder="Email ID"/></div>
+	<div class="form-group mobile">
+	<label class="control-label">Mobile No.</label>
+	<input class="form-control" type="text" id="mobile" placeholder="Mobile No."/></div>
+	<div class="form-group">
+	<label class="control-label">Date of birth</label>
+	<input class="form-control" type="date" id="bday"/>
+	<!--<span class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>-->
+	</div>
+	<div class="form-group gender" class="radio">
+	<label class="control-label">Gender: </label>
+	<label class="radio-inline">
+		<input type="radio" name="gender" value="male">Male
+	</label>
+	<label class="radio-inline">
+		<input type="radio" name="gender" value="female">Female
+	</label>
+	<label class="radio-inline">
+		<input type="radio" name="gender" value="other">Other
+	</label>
+	</div>
+	<div class="form-group city">
+	<label class="control-label">City</label>
+	<select class="form-control" id="city" name="city" onChange="getCollege(this.value)"> </select>
+	</div>
+	<div class="form-group college">
+	<label class="control-label">College</label>
+	<select class="form-control" id="college" name="college"> </select>
+	</div>
+	<div class="form-group">
+	<label class="control-label">Year</label>
+	<select class="form-control" id="year">
 		<option value="first">first</option>
 		<option value="second">second</option>
 		<option value="third">third</option>
 		<option value="fourth">fourth</option>
+		<option value="fifth">fifth</option>
 	</select>
-	<input type="submit" onclick="randm()" />
+	</div>
+	<input class="btn btn-lg btn-primary btn-block" type="submit" onclick="randm()" />
+ 	</div>
  </div>
-
+</div>
 </body>
 </html>
