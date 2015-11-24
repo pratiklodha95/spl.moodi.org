@@ -22,6 +22,9 @@ var connection = mysql.createConnection({
 
 app.get('/',express.static(__dirname)); //serves index.html
 
+app.get('/api/redirect',function(req,res){
+
+});
 
 var insert=function(params,new_mi_no,res)
 {
