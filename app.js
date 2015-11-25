@@ -1,5 +1,6 @@
 var http=require("http");
 var express=require("express");
+var cookieParser = require('cookie-parser');
 var bodyParser=require("body-parser");
 var mysql=require('mysql');
 var path=require('path');
@@ -18,12 +19,22 @@ var connection = mysql.createConnection({
 	password :'' ,
 	database :'' 
 })
+function makeid()
+{
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
+    for( var i=0; i < 6; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
+var allowedID=makeid();
 // connection.connect();
 
 app.get('/',express.static(__dirname)); //serves index.html
 app.use(express.static('public'));
-
+app.use(cookieParser());
 var insert=function(params,new_mi_no,res)
 {
 	new_mi_no=new_mi_no.toUpperCase();
@@ -53,9 +64,11 @@ var insert=function(params,new_mi_no,res)
 			      if (object.city_id == 1)
 			      {
 			      	//mumbai junta
-				  	var string = encodeURIComponent(new_mi_no);
-				  	req.session.mi_no = new_mi_no;
-					res.redirect('/concerts.html?mino=' + string);
+				  	allowedID = sessionID;
+					var cookCode = {"sessionID": sessionID}; 
+					res.cookie("code", sessionID);
+					console.log(sessionID);
+					console.log("code: ", req.cookies["code"]);
 			     
 			        if(object.cl_bool==1)
 			        {
@@ -90,16 +103,23 @@ var insert=function(params,new_mi_no,res)
 }
 
 app.post('/api/mumbai',function(req,res){
-	if(req.params.mino==req.session.mi_no)
+	if(true)
 	{
-		connection.query("UPDATE users SET concert = "+req.params+" WHERE mi_no = "+req.session.mi_no,function(err,rows,fields){
-			
+		connection.query("UPDATE users SET concert = "+req.params.concert+" WHERE mi_no = "+req.params.mi_no,function(err,rows,fields){
+			if(!err)
+			{
+				var obj={
+					status:true,
+					message:"Successfully Registered for the concerts"
+				}
+				res.send(obj);
+			}
 		});
 	}
 });
 
 app.get('/test',function(req,res){
-  	var string = encodeURIComponent('M');
+  	var string = encodeURIComponent('MI-PRA-101');
 	res.redirect('/concerts.html?mino=' + string);
 });
 

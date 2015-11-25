@@ -23,11 +23,20 @@
 		$('.mino').html("<h3>Your MI Number is "+params.mino+"</h3>");
 	}
 	function sendConcert(){
-		var inputElements= document.getElementsByClass("messageCheckbox")
+		var inputElements= document.getElementsByClassName("messageCheckbox")
 		var checked = [];
+		var strchecked=""
 		for(var i=0; i<4; i++)
-			checked[i]=inputElements[i].checked?1:0;
-		console.log(checked);
+			{
+				checked[i]=inputElements[i].checked?1:0;
+				strchecked+=checked[i]+'-';
+			}
+		$.post('/api/mumbai',{concert:strchecked,mino:params.mino},function(data){
+			if(data.status)
+			{
+				console.log("success");
+			}
+		});
 	}
 </script>
 

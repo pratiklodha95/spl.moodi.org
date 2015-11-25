@@ -51,7 +51,7 @@
 			{
 				$('.has-error').removeClass('has-error');
 				$('.form-group').addClass('has-success');
-				$.post("http://lite.moodi.org/api/submit",{city:city, name:name,email:email, mobile:mobile, gender:gender, college:college, year:year},function(data){
+				$.post("http://spl.moodi.org/api/submit",{city:city, name:name,email:email, mobile:mobile, gender:gender, college:college, year:year},function(data){
 					console.log(data);
 					if(data.status && data.city_id != 1)
 					{
@@ -60,8 +60,10 @@
 					else if(data.status && data.city_id == 1)
 					{
 						function ticket(){
-							window.location.assign("spl.moodi.org/ticket.html");
+						  	var string = encodeURIComponent(data.mi_no);
+							window.location.assign("http://spl.moodi.org/concerts.html?mino="+string);
 						}
+						ticket();
 					}
 					else if(data.err==1)
 					{

@@ -5,6 +5,23 @@
 
 <script type="text/javascript">
 	
+	function getUrlVars()
+	{
+	    var vars = [], hash;
+	    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+	    for(var i = 0; i < hashes.length; i++)
+	    {
+	        hash = hashes[i].split('=');
+	        vars.push(hash[0]);
+	        vars[hash[0]] = hash[1];
+	    }
+	    return vars;
+	}
+	var mino=getUrlVars();
+	if(mino=undefined)
+	{
+		window.location.assign("http://spl.moodi.org");
+	}
 	function sendConcert(){
 		var checked = [];
 		var inputElements= document.getElementsByClassName("messageCheckbox")
@@ -12,9 +29,12 @@
 			checked[i]=inputElements[i].checked?1:0;
 		console.log(checked);
 
-		$post("https://127.0.0.1:5678", {concerts:checked}){
-		console.log(checked);	
-	}
+		$.post("https://spl.moodi.org/api/mumbai",{concerts:checked,mi_no:mino},function(data){
+			if(data.status)
+			{
+
+			}
+		});
 	}
 
 </script>
@@ -22,6 +42,7 @@
 </head>
 <body>
 <div id="jumbotron">
+	<div></div>
 	<div id="container">
 		<div class="concert">
 			<img src="images/concert1.jpg">
@@ -51,7 +72,7 @@
 			<p>Date: 21/12/2015</p>
 			<input class="messageCheckbox" type="checkbox" name="concert" value="4">select</br>
 		</div> </br>
-		<input type="button" onclick="sendConcert()" value="Submit"> 
+		<input type="button" onclick="sendConcert()"> 
 	</div>
 </div>
 </body>
