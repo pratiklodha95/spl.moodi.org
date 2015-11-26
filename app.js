@@ -8,16 +8,16 @@ var mail=require('./api/mailing');
 var app=express();
 
 
-app.set('port',process.env.PORT || 5678);
+app.set('port',process.env.PORT || 5679);
 
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 var mysql = require('mysql');
 var connection = mysql.createConnection({
 	host : 'localhost',
-	user : '',
-	password :'' ,
-	database :'' 
+	user : 'mi_2014',
+	password :'dontfuckaround' ,
+	database :'mi_2014' 
 })
 function makeid()
 {
@@ -35,11 +35,20 @@ var allowedID=makeid();
 app.get('/',express.static(__dirname)); //serves index.html
 app.use(express.static('public'));
 app.use(cookieParser());
-var insert=function(params,new_mi_no,res)
+var insert=function(params,new_mi_no,res,req)
 {
 	new_mi_no=new_mi_no.toUpperCase();
 	console.log(new_mi_no);
-	 connection.query('insert into users (mi_no, city_id, clg_id, name, email, phone, gender, year_study) values (' + connection.escape(new_mi_no) + ', '+ connection.escape(params.city) + ', ' + connection.escape(params.college) + ', ' + connection.escape(params.name) + ', ' + connection.escape(params.email) + ', ' + connection.escape(params.mobile) + ', ' + connection.escape(params.gender) + ', ' + connection.escape(params.year) + ')',function selectCb(err, results, fields)
+	if(params.city=='1')
+	{
+		var sessionID = makeid();	
+	  	allowedID = sessionID;
+		var cookCode = {"sessionID": sessionID}; 
+		res.cookie("code", sessionID);
+		console.log(sessionID);
+		console.log("code: ", req.cookies["code"]);
+	}
+	 connection.query('insert into users (mi_no, city_id, clg_id, name, email, phone, gender, year_study, dob) values (' + connection.escape(new_mi_no) + ', '+ connection.escape(params.city) + ', ' + connection.escape(params.college) + ', ' + connection.escape(params.name) + ', ' + connection.escape(params.email) + ', ' + connection.escape(params.mobile) + ', ' + connection.escape(params.gender) + ', ' + connection.escape(params.year) + ', ' + connection.escape(params.bday) + ')',function selectCb(err, results, fields)
 	 {
 	 	if(err){
 	 		var obj={
@@ -53,26 +62,24 @@ var insert=function(params,new_mi_no,res)
 	 		var obj={
 	 			status:true,
 	 			mi_no:new_mi_no,
-	 			message:"Successfully Registered"
+	 			message:"Successfully Registered",
+	 			city_id:params.city
 	 		}
 	 		res.send(obj);
 	 		//sending mails
-	 		connection.query('SELECT * FROM colleges where city_id =' + connection.escape(params.city_id) + ' and clg_id = ' + connection.escape(params.college_id), function(err, rows, fields) {
+	 		var subject="Mood Indigo Registration";
+	 		connection.query('SELECT * FROM colleges where city_id =' + connection.escape(params.city) + ' and clg_id = ' + connection.escape(params.college), function(err, rows, fields) {
 			   	  var object=rows[0];
 			   	  console.log(object.city_id);
 			   	  console.log(object.cl_bool);
 			      if (object.city_id == 1)
 			      {
 			      	//mumbai junta
-				  	allowedID = sessionID;
-					var cookCode = {"sessionID": sessionID}; 
-					res.cookie("code", sessionID);
-					console.log(sessionID);
-					console.log("code: ", req.cookies["code"]);
-			     
+
+			     	
 			        if(object.cl_bool==1)
 			        {
-			          	connection.query('SELECT * FROM users where city_id =' + connection.escape(params.city_id) + ' and clg_id = ' + connection.escape(params.college_id) + ' and group_id = "1"' , function(err, rows, fields) {
+			          	connection.query('SELECT * FROM users where city_id =' + connection.escape(params.city) + ' and clg_id = ' + connection.escape(params.college) + ' and group_id = "1"' , function(err, rows, fields) {
 				            if (err) console.log(err);
 				            var message = "Hello,<br>Greetings from Mood Indigo!<br>Thanks for Registering. You are successfully Registered, your MI number is :"+new_mi_no + "<br><br>";
 				            mail.email(params.email,'registrations@moodi.org',subject,message)
@@ -86,7 +93,7 @@ var insert=function(params,new_mi_no,res)
 			      }
 			      else{
 			        if(object.cl_bool==1){
-			          connection.query('SELECT * FROM users where city_id =' + connection.escape(params.city_id) + ' and clg_id = ' + connection.escape(params.college_id) + ' and group_id = "1"' , function(err, rows, fields) {
+			          connection.query('SELECT * FROM users where city_id =' + connection.escape(params.city) + ' and clg_id = ' + connection.escape(params.college) + ' and group_id = "1"' , function(err, rows, fields) {
 						console.log(err);
 			            var message = "Thanks for Registering. You are successfully Registered, your MI number is :"+new_mi_no + "<br>To participate and avail accommodation as a part of the Contingent from your college, kindly contact your Contingent Leader (CL) whose details are as follows:<br><br>Name : " + rows[0].name + "<br>Email :" +rows[0].email +".<br><br> For general queries get in touch with the Hospitality & Public Relations Core Group Members";
 			            mail.email(params.email,'registrations@moodi.org',subject,message)
@@ -102,10 +109,13 @@ var insert=function(params,new_mi_no,res)
 	 });
 }
 
-app.post('/api/mumbai',function(req,res){
+app.post('/api/mumbai',urlencodedParser,function(req,res){
 	if(true)
 	{
-		connection.query("UPDATE users SET concert = "+req.params.concert+" WHERE mi_no = "+req.params.mi_no,function(err,rows,fields){
+		console.log(req.body.mino);
+		console.log(req.body.concert)
+		console.log("UPDATE users SET concert = "+req.body.concert+" WHERE mi_no = '"+req.body.mino+"'");
+		connection.query("UPDATE users SET concert = '"+req.body.concert+"' WHERE mi_no = '"+req.body.mino+"'",function(err,rows,fields){
 			if(!err)
 			{
 				var obj={
@@ -113,6 +123,10 @@ app.post('/api/mumbai',function(req,res){
 					message:"Successfully Registered for the concerts"
 				}
 				res.send(obj);
+			}
+			else
+			{
+				console.log(err);
 			}
 		});
 	}
@@ -170,7 +184,7 @@ app.post('/api/submit',urlencodedParser,function(req,res){
 						if(rowss[0]==null)
 						{
 							new_mi_no='MI-'+mi+'-101';
-							insert(params,new_mi_no,res);
+							insert(params,new_mi_no,res,req);
 						}
 						else if(parseInt(rowss[0].mi_no.split("-")[2])==999)
 						{
@@ -188,13 +202,13 @@ app.post('/api/submit',urlencodedParser,function(req,res){
 	                  			else if(rowsss[0]==null)
 	                  			{
 	                  				new_mi_no='MI-'+mi+'-1000';
-	                  				insert(params,new_mi_no,res);
+	                  				insert(params,new_mi_no,res,req);
 	                  			}
 	                  			else
 	                  			{
 	              					var no=parseInt(rowsss[0].mi_no.split("-")[2])+1;
 	                      			new_mi_no='MI-'+mi+'-'+no;
-	                      			insert(params,new_mi_no,res);
+	                      			insert(params,new_mi_no,res,req);
 	                  			}
 	                  		});
 						}
@@ -202,7 +216,7 @@ app.post('/api/submit',urlencodedParser,function(req,res){
 						{
 							var no=parseInt(rowss[0].mi_no.split("-")[2])+1;
 	           		 		new_mi_no='MI-'+mi+'-'+no;
-	           		 		insert(params,new_mi_no,res);
+	           		 		insert(params,new_mi_no,res,req);
 						}
 					}
 				})//end of second query

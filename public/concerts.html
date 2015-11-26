@@ -4,6 +4,7 @@
 <head>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
 <script type="text/javascript">
 	function getUrlVars()
 	{
@@ -17,10 +18,16 @@
 		}
 		return vars;
 	}
+	
 	var params=getUrlVars();
 	window.onload=function()
 	{
-		$('.mino').html("<h3>Your MI Number is "+params.mino+"</h3>");
+		if(params.mino==undefined)
+		{
+			window.location.assign("http://spl.moodi.org");
+		}
+		console.log(params);
+		$('.mino').append("<h3>Your MI Number is "+params.mino+"</h3>");
 	}
 	function sendConcert(){
 		var inputElements= document.getElementsByClassName("messageCheckbox")
@@ -35,6 +42,7 @@
 			if(data.status)
 			{
 				console.log("success");
+				$('#jumbotron').html("Your request has been recorded. Stay tuned to facebook page for more updates. <br><br> You will get the concert pass as a email a week before the festival. <br><br> Thank you");
 			}
 		});
 	}
@@ -43,39 +51,35 @@
 </head>
 <body>
 <div id="jumbotron">
-	<div class="mino"></div>
+	<div class="mino">
+		<h2>Successfully Registered</h2>
+	</div>
 	<div id="container">
-	<form>
-		<div class="concert">
-			<img src="images/concert1.jpg">
+		<div class="concert c1">
 			<p>Nostalgia Night</p>
 			<p>Artist: Shaan</p>
 			<p>Date: 18/12/2015</p>
-			<input class="messageCheckbox" type="checkbox" name="concert" value="1">select</br>
+			<input class="messageCheckbox form-control" type="checkbox" name="concert"  value="1">select</br>
 		</div>
-		<div class="concert">
-			<img src="images/concert2.jpg">
+		<div class="concert c2">
 			<p>Not decided</p>
 			<p>Artist: Not decided</p>
 			<p>Date: 19/12/2015</p>
-			<input class="messageCheckbox" type="checkbox" name="concert" value="2">select</br>
+			<input class="messageCheckbox form-control" type="checkbox" name="concert" value="2">select</br>
 		</div>
-		<div class="concert">
-			<img src="images/concert3.jpg">
+		<div class="concert c2">
 			<p>EDM Night</p>
 			<p>Artist: BORGEOUS</p>
 			<p>Date: 20/12/2015</p>
-			<input class="messageCheckbox" type="checkbox" name="concert" value="3">select</br>
+			<input class="messageCheckbox form-control" type="checkbox" checked name="concert" value="3">select</br>
 		</div>
-		<div class="concert">
-			<img src="images/concert4.jpg">
+		<div class="concert c4">
 			<p>Popular Night</p>
 			<p>Artist: Pritam etc</p>
 			<p>Date: 21/12/2015</p>
-			<input class="messageCheckbox" type="checkbox" name="concert" value="4">select</br>
+			<input class="messageCheckbox form-control" type="checkbox" name="concert" value="4">select</br>
 		</div> </br>
-		<input type="submit" onclick="sendConcert()" value="Submit">
-	</form>
+		<input type="submit" onclick="sendConcert()" value="Submit" class="btn btn-lg btn-primary btn-block submit">
 	</div>
 </div>
 </body>
